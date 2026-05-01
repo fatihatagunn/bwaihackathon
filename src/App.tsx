@@ -17,7 +17,7 @@ import { Navbar } from './components/Navbar';
 import { ProjectGrid } from './components/ProjectGrid';
 import { AddProjectModal } from './components/AddProjectModal';
 import { motion, AnimatePresence } from 'motion/react';
-import { Plus, Layout } from 'lucide-react';
+import { Plus, Layout, ExternalLink } from 'lucide-react';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -99,19 +99,29 @@ export default function App() {
               <span className="text-[11px] font-mono uppercase tracking-[0.2em] opacity-40">2026 Hackathon Vitrini</span>
             </div>
             <h1 className="text-6xl md:text-8xl font-medium tracking-tighter leading-none italic font-serif">
-              Projeleri Keşfet.
+              Geleceği İnşa Et.
             </h1>
           </div>
           
-          {user && (
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 px-8 py-4 bg-[#141414] text-[#E4E3E0] rounded-full hover:scale-105 transition-transform active:scale-95 text-sm font-medium tracking-tight"
+          <div className="flex flex-col items-end gap-4">
+            <a 
+              href="https://bwai.gdgtrabzon.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[10px] uppercase tracking-widest font-mono opacity-40 hover:opacity-100 transition-opacity flex items-center gap-2"
             >
-              <Plus className="w-4 h-4" />
-              Proje Ekle
-            </button>
-          )}
+              Etkinlik Sayfasına Git <ExternalLink className="w-3 h-3" />
+            </a>
+            {user && (
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="flex items-center gap-2 px-8 py-4 bg-[#141414] text-[#E4E3E0] rounded-full hover:scale-105 transition-transform active:scale-95 text-sm font-medium tracking-tight"
+              >
+                <Plus className="w-4 h-4" />
+                Proje Ekle
+              </button>
+            )}
+          </div>
         </header>
 
         <ProjectGrid projects={projects} />
