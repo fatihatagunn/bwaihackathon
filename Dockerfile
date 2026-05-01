@@ -1,26 +1,20 @@
-# Build stage
-FROM node:20-alpine AS build
+# 1. Aşama: Build
+FROM node:20-slim AS build-stage
 WORKDIR /app
-
-# Install dependencies
 COPY package*.json ./
 RUN npm install
-
-# Copy source and build
 COPY . .
 RUN npm run build
 
-# Production stage
-FROM nginx:stable-alpine
+# 2. Aşama: Production (Nginx ile servis etme)
+FROM nginx:alpine
+# Build aşamasından gelen dosyaları kopyala (Klasör adının 'dist' olduğundan emin ol)
+COPY --from=build-stage /app/dist /usr/share/nginx/html
 
-# Copy custom nginx config if we had one, but default works for SPAs generally
-# If you need SPA routing support in Docker, uncomment the line below and create nginx.conf
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Cloud Run'ın PORT değişkenini Nginx'e geçirmek için küçük bir ayar
+# Nginx varsayılan olarak 80 portunu kullanır, Cloud Run 8080 bekler.
+RUN sed -i 's/listen\s\+80;/listen 8080;/g' /etc/nginx/conf.d/default.conf
 
-# Copy build files from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Expose port 80
-EXPOSE 80
+EXPOSE 8080
 
 CMD ["nginx", "-g", "daemon off;"]
